@@ -1,20 +1,45 @@
-const db = require('../db/dbconnection');
 
-exports.getAllUsers = (req, res) => {
-  db.query('SELECT * FROM users', (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
-    }
-    res.status(200).json(results);
-  });
-};
 
-exports.createUser = (req, res) => {
-  const { name, email } = req.body;
-  db.query('INSERT INTO users (name, email) VALUES (?, ?)', [name, email], (err, results) => {
-    if (err) {
-      return res.status(500).json({ error: err.message });
+
+import { HeaderService } from "../services/headerService.js"
+
+export const headerController = {
+  getHeaderMenu: async function (req, res, next){
+    const {id} = req.query;
+    try {
+      let result = await HeaderService.getHeaderMenu(id);
+      res.json(result);
+    } catch (error) {
+      console.log(error.message);
+      next(error);
     }
-    res.status(201).json({ id: results.insertId, name, email });
-  });
-};
+  },
+  inserHeaderMenu: async function (req, res, next){
+    try {
+      let result = await HeaderService.insertHeaderMenus(req.body);
+      res.json(result);
+    } catch (error) {
+      console.log(error.message);
+      next(error);
+    }
+  },
+  updateHeaderMenu: async function (req, res, next){
+    try {
+      let result = await HeaderService.updateHeaderMenu(req.body);
+      res.json(result);
+    } catch (error) {
+      console.log(error.message);
+      next(error);
+    }
+  },
+  deleteHeaderMenu: async function (req, res, next){
+    try {
+      let result = await HeaderService.deleteHeaderMenu(req.params);
+      res.json(result);
+    } catch (error) {
+      console.log(error.message);
+      next(error);
+    }
+  }
+}
+
